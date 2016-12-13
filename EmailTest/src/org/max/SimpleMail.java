@@ -1,0 +1,76 @@
+package org.max;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
+public class SimpleMail {
+	private final static String FILE_SEPARATOR = File.separator;
+
+	public static void main(String[] args) throws MessagingException {
+
+		System.out.println("Sending mail...");
+		Properties props = new Properties();
+		try {
+			props.load(SimpleMail.class.getClassLoader().getResourceAsStream("email.properties"));
+			// 使用JavaMail发送邮件的5个步骤
+			// 1、创建session
+			Session mailSession = Session.getInstance(props);
+			// 开启Session的debug模式，这样就可以查看到程序发送Email的运行状态
+			mailSession.setDebug(true);
+			// 2、通过session得到transport对象
+			Transport transport = mailSession.getTransport();
+			// 创建邮件对象
+			MimeMessage message = new MimeMessage(mailSession);
+			// 邮件的标题
+			message.setSubject("HTML  mail with images");
+			// 指明邮件的发件人
+			message.setFrom(new InternetAddress(props.getProperty("mail.user")));
+			// 指明邮件的收件人，现在发件人和收件人是一样的，那就是自己给自己发
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(props.getProperty("mail.user")));
+
+			//
+			// This HTML mail have to 2 part, the BODY and the embedded image
+			//
+			MimeMultipart multipart = new MimeMultipart("related");
+
+			// first part (the html)
+			BodyPart messageBodyPart = new MimeBodyPart();
+			String htmlText = "<h1>Hello world</h1><img src=\"cid:imageId\"><br>";
+			messageBodyPart.setContent(htmlText, "text/html");
+
+			// add it
+			multipart.addBodyPart(messageBodyPart);
+
+			// second part (the image)
+			messageBodyPart = new MimeBodyPart();
+			DataSource fds = new FileDataSource(
+					"F:" + FILE_SEPARATOR + "JSoft" + FILE_SEPARATOR + "QRCode" + FILE_SEPARATOR + "160825133535.jpg");
+			messageBodyPart.setDataHandler(new DataHandler(fds));
+			messageBodyPart.setHeader("Content-ID", "<imageId>");
+
+			// add it
+			multipart.addBodyPart(messageBodyPart);
+
+			// put everything together
+			message.setContent(multipart);
+			// message.setContent(multipart,"<h1>Hello world</h1>",
+			// "text/html");
+			transport.connect(props.getProperty("mail.user"), props.getProperty("mail.password"));
+			transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
+			transport.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

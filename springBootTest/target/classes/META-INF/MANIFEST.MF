@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: springBootTest
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: user
+Implementation-Vendor-Id: com.max
+Build-Jdk: 1.8.0_60
+Implementation-URL: http://projects.spring.io/spring-boot/springBootTe
+ st/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
