@@ -1,0 +1,5 @@
+package proxy.test;
+
+public class RealSubject implements Subject {
+
+}

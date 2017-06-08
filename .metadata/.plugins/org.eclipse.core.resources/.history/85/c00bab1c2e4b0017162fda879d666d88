@@ -1,0 +1,8 @@
+package proxy.test;
+
+public interface Subject {
+
+	public void rent();
+	
+	public void hellow(String str);
+}

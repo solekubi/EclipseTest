@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author zengwendong
  */
 public class ReadExcelUtils {
-//    private Logger logger = LoggerFactory.getLogger(ReadExcelUtils.class);
+    private Logger logger = LoggerFactory.getLogger(ReadExcelUtils.class);
     private Workbook wb;
     private Sheet sheet;
     private Row row;
